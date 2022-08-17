@@ -155,6 +155,11 @@ public class Chessboard : MonoBehaviour
     // Board
     private void GenerateGrid(float tileSize, int tileCountX, int tileCountY)
     {
+        GenerateKitchen(tileSize, tileCountX, tileCountY);
+    }
+
+    private void GenerateKitchen(float tileSize, int tileCountX, int tileCountY)
+    {
         yOffset += transform.position.y;
         bounds = new Vector3((tileCountX * 0.5f) * tileSize, 0, (tileCountX * 0.5f) * tileSize) 
             + boardCenter;
