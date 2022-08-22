@@ -7,6 +7,7 @@ public class Chessboard : MonoBehaviour
     [Header("Art Styuff")]
     [SerializeField] private Material tileMat;
     [SerializeField] private Material gardenMat;
+    [SerializeField] private Material queueMat;
     [SerializeField] private float tileSize = 1.0f;
     [SerializeField] private float yOffset = 0.2f;
     [SerializeField] private Vector3 boardCenter = Vector3.zero;
@@ -157,8 +158,9 @@ public class Chessboard : MonoBehaviour
     {
         tiles = new GameObject[tileCountX, tileCountY];
         nodes = new Node[tileCountX, tileCountY];
-        GenerateKitchen(tileSize, 0, 8, tileCountY);
+        GenerateKitchen(tileSize, 1, 8, tileCountY);
         GenerateGarden(tileSize, 8, 10, tileCountY);
+        GenerateQueue(tileSize, 0, 1, tileCountY);
     }
 
     private void GenerateKitchen(float tileSize, int fromRow, int toRow, int tileCountY)
@@ -176,6 +178,13 @@ public class Chessboard : MonoBehaviour
         for (int x = fromRow; x < toRow; x++)
             for (int y = 0; y < tileCountY; y++)
                 tiles[x, y] = GenerateSingleTile(tileSize, x, y, gardenMat, "Garden");
+    }
+
+    private void GenerateQueue(float tileSize, int fromRow, int toRow, int tileCountY)
+    {
+        for (int x = fromRow; x < toRow; x++)
+            for (int y = 0; y < tileCountY; y++)
+                tiles[x, y] = GenerateSingleTile(tileSize, x, y, queueMat, "Queue");
     }
     private GameObject GenerateSingleTile(float tileSize, int x, int y, Material material, string layer)
     {
