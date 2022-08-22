@@ -33,7 +33,6 @@ public class Chessboard : MonoBehaviour
     private List<Unit> deadUnits_enemy = new List<Unit>();
     private Camera currentCam;
     private Vector2Int currentHover;
-    private Vector3 bounds;
 
     private void Awake() 
     {
@@ -161,8 +160,6 @@ public class Chessboard : MonoBehaviour
     private void GenerateKitchen(float tileSize, int tileCountX, int tileCountY)
     {
         yOffset += transform.position.y;
-        bounds = new Vector3((tileCountX * 0.5f) * tileSize, 0, (tileCountX * 0.5f) * tileSize) 
-            + boardCenter;
 
         tiles = new GameObject[tileCountX, tileCountY];
         nodes = new Node[tileCountX, tileCountY];
@@ -181,10 +178,10 @@ public class Chessboard : MonoBehaviour
 
 
         Vector3[] vertices = new Vector3[4];
-        vertices[0] = new Vector3(x * tileSize, yOffset, y * tileSize) - bounds;
-        vertices[1] = new Vector3(x * tileSize, yOffset, (y+1) * tileSize) - bounds;
-        vertices[2] = new Vector3((x+1) * tileSize, yOffset, y * tileSize) - bounds;
-        vertices[3] = new Vector3((x+1) * tileSize, yOffset, (y+1) * tileSize) - bounds;
+        vertices[0] = new Vector3(x * tileSize, yOffset, y * tileSize);
+        vertices[1] = new Vector3(x * tileSize, yOffset, (y+1) * tileSize);
+        vertices[2] = new Vector3((x+1) * tileSize, yOffset, y * tileSize);
+        vertices[3] = new Vector3((x+1) * tileSize, yOffset, (y+1) * tileSize);
 
         int[] tris = new int[] { 0, 1, 2, 1, 3, 2 };
 
@@ -343,7 +340,7 @@ public class Chessboard : MonoBehaviour
     }
     private Vector3 GetTileCenter(int x, int y)
     {
-        return new Vector3(x * tileSize, yOffset, y * tileSize) - bounds + new Vector3(tileSize * 0.5f, 0, tileSize * 0.5f);
+        return new Vector3(x * tileSize, yOffset, y * tileSize) + new Vector3(tileSize * 0.5f, 0, tileSize * 0.5f);
     }
 
     // Highlight tiles
@@ -394,7 +391,6 @@ public class Chessboard : MonoBehaviour
                 other.SetScale(Vector3.one * deathSize);
                 other.SetPosition(
                     new Vector3(-1 * tileSize, yOffset, 8 * tileSize)
-                    - bounds
                     + new Vector3(tileSize * 0.5f, 0, tileSize * 0.5f)
                     + (Vector3.back * deathSpacing) * deadUnits_enemy.Count);
             }
@@ -405,7 +401,6 @@ public class Chessboard : MonoBehaviour
                 other.SetScale(Vector3.one * deathSize);
                 other.SetPosition(
                     new Vector3(8 * tileSize, yOffset, -1 * tileSize)
-                    - bounds
                     + new Vector3(tileSize * 0.5f, 0, tileSize * 0.5f)
                     + (Vector3.forward * deathSpacing) * deadUnits_player.Count);
             }
