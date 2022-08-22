@@ -26,8 +26,8 @@ public class Chessboard : MonoBehaviour
     [HideInInspector] public GameObject[,] tiles;
     [HideInInspector] public Node[,] nodes;
     private Unit currentlyDragging;
-    private const int TILE_COUNT_X = 8;
-    private const int TILE_COUNT_Y = 8;
+    private const int TILE_COUNT_X = 10;
+    private const int TILE_COUNT_Y = 10;
     public Vector2Int GetBoardSize() { return new(TILE_COUNT_X, TILE_COUNT_Y); }
     private List<Vector2Int> availableMoves = new List<Vector2Int>();
     private List<Unit> deadUnits_player = new List<Unit>();
@@ -168,16 +168,16 @@ public class Chessboard : MonoBehaviour
 
         for (int x = fromRow; x < toRow; x++)
             for (int y = 0; y < tileCountY; y++)
-                tiles[x, y] = GenerateSingleTile(tileSize, x, y, tileMat);
+                tiles[x, y] = GenerateSingleTile(tileSize, x, y, tileMat, "Tile");
     }
 
     private void GenerateGarden(float tileSize, int fromRow, int toRow, int tileCountY)
     {
         for (int x = fromRow; x < toRow; x++)
             for (int y = 0; y < tileCountY; y++)
-                tiles[x, y] = GenerateSingleTile(tileSize, x, y, gardenMat);
+                tiles[x, y] = GenerateSingleTile(tileSize, x, y, gardenMat, "Garden");
     }
-    private GameObject GenerateSingleTile(float tileSize, int x, int y, Material material)
+    private GameObject GenerateSingleTile(float tileSize, int x, int y, Material material, string layer)
     {
         GameObject tileObject = new GameObject(string.Format("X:{0}, Y:{1}", x, y));
         tileObject.transform.parent = transform;
@@ -206,7 +206,7 @@ public class Chessboard : MonoBehaviour
         }
         else
         {
-            tileObject.layer = LayerMask.NameToLayer("Tile");
+            tileObject.layer = LayerMask.NameToLayer(layer);
             nodes[x, y] = new Node(true, x, y);
         }
 
