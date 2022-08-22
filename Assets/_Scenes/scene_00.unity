@@ -179,6 +179,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Board
       objectReference: {fileID: 0}
+    - target: {fileID: 166942, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 487252, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
       propertyPath: m_RootOrder
       value: 2
@@ -223,7 +227,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    - target: {fileID: 2331998, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6411946, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
+      propertyPath: m_Enabled
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 1123606733, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
+      propertyPath: gardenMat
+      value: 
+      objectReference: {fileID: 2100000, guid: f9214a13446b4e84882120bac9cd3cae, type: 2}
+    m_RemovedComponents:
+    - {fileID: 2331998, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
+    - {fileID: 6411946, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
   m_SourcePrefab: {fileID: 100100000, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
 --- !u!1 &513925048
 GameObject:
@@ -447,7 +465,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2061371902}
   m_LocalRotation: {x: 0.54096043, y: -0, z: -0, w: 0.84104806}
-  m_LocalPosition: {x: 0, y: 28.41, z: -14.07}
+  m_LocalPosition: {x: 8.17, y: 28.62, z: -7}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

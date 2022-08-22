@@ -6,6 +6,7 @@ public class Chessboard : MonoBehaviour
 {
     [Header("Art Styuff")]
     [SerializeField] private Material tileMat;
+    [SerializeField] private Material gardenMat;
     [SerializeField] private float tileSize = 1.0f;
     [SerializeField] private float yOffset = 0.2f;
     [SerializeField] private Vector3 boardCenter = Vector3.zero;
@@ -154,27 +155,36 @@ public class Chessboard : MonoBehaviour
     // Board
     private void GenerateGrid(float tileSize, int tileCountX, int tileCountY)
     {
-        GenerateKitchen(tileSize, tileCountX, tileCountY);
-    }
-
-    private void GenerateKitchen(float tileSize, int tileCountX, int tileCountY)
-    {
-        yOffset += transform.position.y;
-
         tiles = new GameObject[tileCountX, tileCountY];
         nodes = new Node[tileCountX, tileCountY];
-        for (int x = 0; x < tileCountX; x++)
-            for (int y = 0; y < tileCountY; y++)
-                tiles[x, y] = GenerateSingleTile(tileSize, x, y);
+        GenerateKitchen(tileSize, 0, 8, tileCountY);
+        GenerateGarden(tileSize, 8, 10, tileCountY);
     }
-    private GameObject GenerateSingleTile(float tileSize, int x, int y)
+
+    private void GenerateKitchen(float tileSize, int fromRow, int toRow, int tileCountY)
+    {
+        yOffset += transform.position.y;
+        int tileCountX = toRow - fromRow;
+
+        for (int x = fromRow; x < toRow; x++)
+            for (int y = 0; y < tileCountY; y++)
+                tiles[x, y] = GenerateSingleTile(tileSize, x, y, tileMat);
+    }
+
+    private void GenerateGarden(float tileSize, int fromRow, int toRow, int tileCountY)
+    {
+        for (int x = fromRow; x < toRow; x++)
+            for (int y = 0; y < tileCountY; y++)
+                tiles[x, y] = GenerateSingleTile(tileSize, x, y, gardenMat);
+    }
+    private GameObject GenerateSingleTile(float tileSize, int x, int y, Material material)
     {
         GameObject tileObject = new GameObject(string.Format("X:{0}, Y:{1}", x, y));
         tileObject.transform.parent = transform;
 
         Mesh mesh = new Mesh();
         tileObject.AddComponent<MeshFilter>().mesh = mesh;
-        tileObject.AddComponent<MeshRenderer>().material = tileMat;
+        tileObject.AddComponent<MeshRenderer>().material = material;
 
 
         Vector3[] vertices = new Vector3[4];
