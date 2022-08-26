@@ -35,10 +35,6 @@ public class Pathfinding : MonoBehaviour
         Node startNode = board.nodes[startPos.x, startPos.y];
         Node targetNode = board.nodes[targetPos.x, targetPos.y];
 
-        //if (startNode.walkable && targetNode.walkable)
-        //{
-        //
-        //}
         Heap<Node> openSet = new Heap<Node>(board.nodes.Length);
         HashSet<Node> closedSet = new HashSet<Node>();
         openSet.Add(startNode);
@@ -84,6 +80,63 @@ public class Pathfinding : MonoBehaviour
             waypoints = RetracePath(startNode, targetNode);
         }
         requestManager.FinishedProcessingPath(waypoints, pathSuccess); 
+    }
+
+    public IEnumerator FindClosestTileOfLayer(
+        Vector2Int startPos,
+        string targetLayerName,
+        Restriction restriction
+        )
+    {
+        Vector2Int[] waypoints = new Vector2Int[0];
+        bool pathSuccess = false;
+
+        Node startNode = board.nodes[startPos.x, startPos.y];
+        Node targetNode = null;
+        Heap<Node> openSet = new Heap<Node>(board.nodes.Length);
+        HashSet<Node> closedSet = new HashSet<Node>();
+        openSet.Add(startNode);
+
+        while (openSet.Count > 0)
+        {
+            Node currentNode = openSet.RemoveFirst();
+            closedSet.Add(currentNode);
+
+            if (board.tiles[currentNode.x, currentNode.y].layer == LayerMask.NameToLayer(targetLayerName))
+            {
+                pathSuccess = true;
+                targetNode = board.nodes[currentNode.x, currentNode.y];
+                break;
+            }
+
+            foreach (Node neighbour in board.GetNeighbourNodes(currentNode, restriction))
+            {
+                if (!neighbour.walkable
+                    || closedSet.Contains(neighbour)
+                    || board.GetUnits()[neighbour.x, neighbour.y] != null)
+                {
+                    continue;
+                }
+
+                int newMovementCostToNeighbour = currentNode.gCost + GetDistance(currentNode, neighbour);
+                if (newMovementCostToNeighbour < neighbour.gCost || !openSet.Contains(neighbour))
+                {
+                    neighbour.gCost = newMovementCostToNeighbour;
+                    neighbour.parent = currentNode;
+
+                    if (!openSet.Contains(neighbour))
+                        openSet.Add(neighbour);
+                    else
+                        openSet.UpdateItem(neighbour);
+                }
+            }
+        }
+        yield return null;
+        if (pathSuccess && targetNode != null)
+        {
+            waypoints = RetracePath(startNode, targetNode);
+        }
+        requestManager.FinishedProcessingPath(waypoints, pathSuccess);
     }
 
     Vector2Int[] RetracePath(Node startNode, Node endNode)

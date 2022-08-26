@@ -224,11 +224,7 @@ public class Unit : MonoBehaviour
             t = moveInterval * Random.Range(0.83f, 1.15f);
         }
     }
-    public virtual void FindTarget()
-    {
-
-    }
-
+    
     public virtual void Move()
     {
         if (goingToMove)
