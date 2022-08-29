@@ -290,6 +290,19 @@ public class Chessboard : MonoBehaviour
         return neighbours;
     }
 
+    private bool IsOfType(int x, int y, NodeType type)
+    {
+        if (x < TILE_COUNT_X && x >= 0 && y < TILE_COUNT_Y && y >= 0) {
+            return nodes[x,y].type == type;
+        }
+        return false;
+    }
+
+    public bool IsNeighbourOfType(int x, int y, NodeType type)
+    {
+        return (IsOfType(x-1, y, type) || IsOfType(x+1, y, type) || IsOfType(x, y-1, type) || IsOfType(x, y+1, type));
+    }
+
     // Spawning of the units
     private void SpawnAllUnits()
     {

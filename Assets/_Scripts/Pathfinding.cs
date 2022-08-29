@@ -109,7 +109,7 @@ public class Pathfinding : MonoBehaviour
             Node currentNode = openSet.RemoveFirst();
             closedSet.Add(currentNode);
 
-            if (currentNode.type == targetType)
+            if (board.IsNeighbourOfType(currentNode.x, currentNode.y, targetType))
             {
                 pathSuccess = true;
                 targetNode = board.nodes[currentNode.x, currentNode.y];
@@ -119,7 +119,7 @@ public class Pathfinding : MonoBehaviour
             foreach (Node neighbour in board.GetNeighbourNodes(currentNode, restriction))
             {
                 if (
-                    (!neighbour.walkable && neighbour.type != targetType)
+                    (!neighbour.walkable)
                     || closedSet.Contains(neighbour)
                     || board.GetUnits()[neighbour.x, neighbour.y] != null
                     )
