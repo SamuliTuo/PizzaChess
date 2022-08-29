@@ -220,7 +220,7 @@ public class Chessboard : MonoBehaviour
         else
         {
             tileObject.layer = LayerMask.NameToLayer(layer);
-            nodes[x, y] = new Node(true, x, y, NodeType.KITCHEN);
+            nodes[x, y] = new Node(true, x, y, NodeType.NONE);
         }
         
 
