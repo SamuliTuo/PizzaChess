@@ -219,7 +219,7 @@ public class Unit : MonoBehaviour
         else
         {
             ResetPath();
-            availableMoves = GetAvailableMoves(ref units, boardSize.x, boardSize.y);
+            //availableMoves = GetAvailableMoves(ref units, boardSize.x, boardSize.y);
             PathRequestManager.RequestPath(new Vector2Int(x, y), new Vector2Int(0, 0), OnPathFound);//target
             goingToMove = true;
             t = moveInterval * Random.Range(0.83f, 1.15f);

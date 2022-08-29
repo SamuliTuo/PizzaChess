@@ -19,7 +19,7 @@ public class Unit_cook : Unit
             {
                 if (board.MoveUnit(this, path[targetIndex])) 
                 {
-                    if (targetIndex >= path.Length - 1) 
+                    if (targetIndex >= path.Length - 1)
                     {
                         atTarget = true;
                         yield break;
@@ -100,21 +100,21 @@ public class Unit_cook : Unit
         else {
             if (atTarget)
             {
+                goingToMove = true;
                 // Mine();
                 // miningInterval?
             }
             else
             {
-                ResetPath();
-                availableMoves = GetAvailableMoves(ref units, boardSize.x, boardSize.y);
+                //ResetPath();
                 PathRequestManager.RequestFindClosestNode(
                     new Vector2Int(x, y),
                     NodeType.COUNTER,
                     OnPathFound);
                 goingToMove = true;
+                atTarget = true;
             }
             t = moveInterval * Random.Range(0.82f, 1.15f);
         }
     }
 }
-

@@ -140,7 +140,8 @@ public class Chessboard : MonoBehaviour
     {
         Vector2Int previousPos = new Vector2Int(unit.x, unit.y);
 
-        bool validMove = MoveTo(unit, targetPos.x, targetPos.y, ref unit.availableMoves);
+        List<Vector2Int> availableMoves = unit.GetAvailableMoves(ref activeUnits, TILE_COUNT_X, TILE_COUNT_Y);
+        bool validMove = MoveTo(unit, targetPos.x, targetPos.y, ref availableMoves);
         if (!validMove)
         {
             unit.SetPosition(GetTileCenter(previousPos.x, previousPos.y));
