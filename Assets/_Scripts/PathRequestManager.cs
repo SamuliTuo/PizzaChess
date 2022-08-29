@@ -29,6 +29,16 @@ public class PathRequestManager : MonoBehaviour
         instance.pathRequestQueue.Enqueue(newRequest);
         instance.TryProcessNext();
     }
+    public static void RequestFindClosestNode(
+        Vector2Int pathStart,
+        NodeType targetType,
+        Action<Vector2Int[], bool> callback,
+        Restriction restriction = Restriction.NONE)
+    {
+        PathRequest newRequest = new PathRequest(pathStart, targetType, callback, restriction);
+        instance.pathRequestQueue.Enqueue(newRequest);
+        instance.TryProcessNext();
+    }
 
     void TryProcessNext()
     {
@@ -36,7 +46,10 @@ public class PathRequestManager : MonoBehaviour
         {
             currentPathRequest = pathRequestQueue.Dequeue();
             isProcessingPath = true;
-            pathfinding.StartFindPath(currentPathRequest.pathStart, currentPathRequest.pathEnd, currentPathRequest.restriction);
+            if (currentPathRequest.pathEnd == -Vector2Int.one)
+                pathfinding.StartFindClosestNodeOfType(currentPathRequest.pathStart, currentPathRequest.targetNodeType, currentPathRequest.restriction);
+            else
+                pathfinding.StartFindPath(currentPathRequest.pathStart, currentPathRequest.pathEnd, currentPathRequest.restriction);
         }
     }
 
@@ -50,6 +63,7 @@ public class PathRequestManager : MonoBehaviour
     struct PathRequest {
         public Vector2Int pathStart;
         public Vector2Int pathEnd;
+        public NodeType targetNodeType;
         public Action<Vector2Int[], bool> callback;
         public Restriction restriction;
 
@@ -57,6 +71,16 @@ public class PathRequestManager : MonoBehaviour
         {
             pathStart = _start;
             pathEnd = _end;
+            targetNodeType = NodeType.NONE;
+            callback = _callback;
+            restriction = _restriction;
+        }
+
+        public PathRequest(Vector2Int _start, NodeType _type, Action<Vector2Int[], bool> _callback, Restriction _restriction)
+        {
+            pathStart = _start;
+            pathEnd = -Vector2Int.one;
+            targetNodeType = _type;
             callback = _callback;
             restriction = _restriction;
         }

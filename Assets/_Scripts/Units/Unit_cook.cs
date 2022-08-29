@@ -98,91 +98,23 @@ public class Unit_cook : Unit
             t -= Time.deltaTime;
         }
         else {
-            if (atTarget) {
+            if (atTarget)
+            {
                 // Mine();
                 // miningInterval?
             }
-            else {
-                if (SearchForDeposit())
-                {
-                    availableMoves = GetAvailableMoves(ref units, boardSize.x, boardSize.y);
-                    ResetPath();
-                    PathRequestManager.RequestPath(
-                        new Vector2Int(x, y),
-                        new(targetDeposit.x, targetDeposit.y),
-                        OnPathFound);
-                    goingToMove = true;
-                }
+            else
+            {
+                ResetPath();
+                availableMoves = GetAvailableMoves(ref units, boardSize.x, boardSize.y);
+                PathRequestManager.RequestFindClosestNode(
+                    new Vector2Int(x, y),
+                    NodeType.COUNTER,
+                    OnPathFound);
+                goingToMove = true;
             }
             t = moveInterval * Random.Range(0.82f, 1.15f);
         }
     }
-
-    bool SearchForDeposit()
-    {
-        // HUOM \\
-        // HUOM \\
-        /// T‰n sijaan voisi k‰ytt‰‰ sit‰ D* FLOODAUS menetelm‰‰ 
-        ///  ja sill‰ etsi‰ deposit, joka on ruutuja pitkin k‰vellen 
-        ///  l‰himp‰n‰ nappulaa.
-
-        float dist = 100000;
-        targetDeposit = null;
-        for (int x = 0; x < board.GetBoardSize().x; x++) {
-            for (int y = 0; y < board.GetBoardSize().y; y++) {
-                if (board.GetUnits()[x,y] != null)
-                    continue;
-                
-                var tile = board.tiles[x,y];
-                if (tile.layer == LayerMask.NameToLayer("Deposit"))
-                {
-                    float tiledist = Vector3.Distance(transform.position, tile.transform.position);
-                    if (dist > tiledist)
-                    {
-                        dist = tiledist;
-                        targetDeposit = board.nodes[x,y];
-                    }
-                }
-            }
-        }
-        if (targetDeposit == null)
-            return false;
-        else 
-            return true;
-    }
 }
-
-/*
-public override void AI(Unit[,] units, Vector2Int boardSize)
-{
-    if (workerT > 0)
-    {
-        workerT -= Time.deltaTime * Random.Range(0.8f, 1.2f);
-    }
-    else if (targetDeposit == null)
-    {
-        if (SearchForDeposit())
-        {
-            //MoveToDeposit();
-        }
-        else
-        {
-            //MoveAroundRandomly();
-        }
-    }
-    else
-    {
-        //MoveToDeposit();
-        availableMoves = GetAvailableMoves(ref units, boardSize.x, boardSize.y);
-        if (availableMoves.Count > 0)
-        {
-            SetTargetMoveTile(availableMoves[Random.Range(0, availableMoves.Count)]);
-            goingToMove = true;
-        }
-        workerT = workerMoveInterval + Random.Range(-0.33f, 0.33f);
-
-
-    }
-}
-*/
 

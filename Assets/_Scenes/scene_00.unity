@@ -236,9 +236,21 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 1123606733, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
+      propertyPath: queueMat
+      value: 
+      objectReference: {fileID: 2100000, guid: ccb3cd93d8953134c9d09894ab613405, type: 2}
+    - target: {fileID: 1123606733, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
       propertyPath: gardenMat
       value: 
       objectReference: {fileID: 2100000, guid: f9214a13446b4e84882120bac9cd3cae, type: 2}
+    - target: {fileID: 1123606733, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
+      propertyPath: prefabs.Array.size
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 1123606733, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
+      propertyPath: prefabs.Array.data[5]
+      value: 
+      objectReference: {fileID: 2368073843827195385, guid: fad94d06d25780643bf20643e0ce80a3, type: 3}
     m_RemovedComponents:
     - {fileID: 2331998, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}
     - {fileID: 6411946, guid: 31270e9f38d5e7a448ae050b9633fce3, type: 3}

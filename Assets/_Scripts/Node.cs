@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum NodeType
+{
+    NONE, KITCHEN, SINK, COUNTER, GARDEN, QUEUE,
+}
+
 public class Node : IHeapItem<Node>
 {
     public bool walkable;
@@ -12,12 +17,14 @@ public class Node : IHeapItem<Node>
     public int hCost;
     public Node parent;
     int heapIndex;
+    public NodeType type;
 
-    public Node(bool walkable, int x, int y)
+    public Node(bool walkable, int x, int y, NodeType type)
     {
         this.walkable = walkable;
         this.x = x;
         this.y = y;
+        this.type = type;
     }
 
     public int fCost {

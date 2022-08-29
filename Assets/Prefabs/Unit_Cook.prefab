@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 2368073843823935231}
   - component: {fileID: 2368073843824960173}
   - component: {fileID: 2368073843829206713}
-  - component: {fileID: -3612060213080868243}
+  - component: {fileID: -4241078332263452294}
   m_Layer: 0
   m_Name: Unit_Cook
   m_TagString: Untagged
@@ -100,7 +100,7 @@ MeshCollider:
   m_Convex: 0
   m_CookingOptions: 30
   m_Mesh: {fileID: 4300000, guid: 6730016ba0e329c499d89e81bd550346, type: 3}
---- !u!114 &-3612060213080868243
+--- !u!114 &-4241078332263452294
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -109,7 +109,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2368073843827195385}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 54dcd29e452ab794eb5eb5958acb7f61, type: 3}
+  m_Script: {fileID: 11500000, guid: 6b7c59b83694f6b448d5d450c636bbcf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   hp: 0
@@ -122,7 +122,7 @@ MonoBehaviour:
   goingToMove: 0
   board: {fileID: 0}
   t: 0
-  moveInterval: 1
+  moveInterval: 0.4
   attackSpeed: 0.5
   attackRange: 1
   availableMoves: []
@@ -130,7 +130,7 @@ MonoBehaviour:
   target: {x: 0, y: 0}
   path: []
   targetIndex: 0
-  workerMoveInterval: 2
+  workerMoveInterval: 1
 --- !u!1 &7089258691098111659
 GameObject:
   m_ObjectHideFlags: 0

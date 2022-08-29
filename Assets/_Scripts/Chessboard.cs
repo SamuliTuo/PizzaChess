@@ -162,7 +162,6 @@ public class Chessboard : MonoBehaviour
         GenerateGarden(tileSize, 8, 10, tileCountY);
         GenerateQueue(tileSize, 0, 1, tileCountY);
     }
-
     private void GenerateKitchen(float tileSize, int fromRow, int toRow, int tileCountY)
     {
         yOffset += transform.position.y;
@@ -172,14 +171,12 @@ public class Chessboard : MonoBehaviour
             for (int y = 0; y < tileCountY; y++)
                 tiles[x, y] = GenerateSingleTile(tileSize, x, y, tileMat, "Tile");
     }
-
     private void GenerateGarden(float tileSize, int fromRow, int toRow, int tileCountY)
     {
         for (int x = fromRow; x < toRow; x++)
             for (int y = 0; y < tileCountY; y++)
                 tiles[x, y] = GenerateSingleTile(tileSize, x, y, gardenMat, "Garden");
     }
-
     private void GenerateQueue(float tileSize, int fromRow, int toRow, int tileCountY)
     {
         for (int x = fromRow; x < toRow; x++)
@@ -207,17 +204,24 @@ public class Chessboard : MonoBehaviour
         mesh.vertices = vertices;
         mesh.triangles = tris;
 
-        if ((y > 1 && y < 14) && Random.Range(0.00f, 1.00f) > 0.83f)
+        if (x == 7 && y == 3)            
         {
-            tileObject.layer = LayerMask.NameToLayer("Deposit");
-            nodes[x, y] = new Node(false, x, y);
+            tileObject.layer = LayerMask.NameToLayer("Sink");
+            nodes[x, y] = new Node(false, x, y, NodeType.SINK);
+            Instantiate(Resources.Load("mineral_pink_mod_01") as GameObject, GetTileCenter(x, y), Quaternion.identity);
+        }
+        else if (x == 2 && y == 2)
+        {
+            tileObject.layer = LayerMask.NameToLayer("Counter");
+            nodes[x, y] = new Node(false, x, y, NodeType.COUNTER);
             Instantiate(Resources.Load("mineral_pink_mod_01") as GameObject, GetTileCenter(x, y), Quaternion.identity);
         }
         else
         {
             tileObject.layer = LayerMask.NameToLayer(layer);
-            nodes[x, y] = new Node(true, x, y);
+            nodes[x, y] = new Node(true, x, y, NodeType.KITCHEN);
         }
+        
 
         tileObject.AddComponent<BoxCollider>().size = new Vector3(tileSize, 0.1f, tileSize);
         mesh.RecalculateNormals();
@@ -293,11 +297,16 @@ public class Chessboard : MonoBehaviour
         int playerTeam = 0;
         int enemyTeam = 1;
 
+        Vector2Int cookSpawnTile = new(TILE_COUNT_X / 2, TILE_COUNT_Y / 2);
+        print(cookSpawnTile.x + ",  " + cookSpawnTile.y);
+        activeUnits[cookSpawnTile.x, cookSpawnTile.y] = SpawnSingleUnit(UnitType.COOK, playerTeam);
+        /*
         for (int i = 0; i < TILE_COUNT_X; i++)
         {
             activeUnits[i, 0] = SpawnSingleUnit(UnitType.WORKER, playerTeam);
             activeUnits[i, 7] = SpawnSingleUnit(UnitType.WORKER, enemyTeam);
         }
+        */
         // Player team
         //activeUnits[0, 0] = SpawnSingleUnit(UnitType.RANGE, playerTeam);
         //activeUnits[1, 0] = SpawnSingleUnit(UnitType.MAGE, playerTeam);

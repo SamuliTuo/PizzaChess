@@ -23,6 +23,13 @@ public class Pathfinding : MonoBehaviour
     {
         StartCoroutine(FindPath(startPos, targetPos, restriction));
     }
+    public void StartFindClosestNodeOfType(
+        Vector2Int startPos,
+        NodeType targetType,
+        Restriction restriction)
+    {
+        StartCoroutine(FindClosestNodeOfType(startPos, targetType, restriction));
+    }
 
     public IEnumerator FindPath(
         Vector2Int startPos, 
@@ -82,9 +89,9 @@ public class Pathfinding : MonoBehaviour
         requestManager.FinishedProcessingPath(waypoints, pathSuccess); 
     }
 
-    public IEnumerator FindClosestTileOfLayer(
+    public IEnumerator FindClosestNodeOfType(
         Vector2Int startPos,
-        string targetLayerName,
+        NodeType targetType,
         Restriction restriction
         )
     {
@@ -102,7 +109,7 @@ public class Pathfinding : MonoBehaviour
             Node currentNode = openSet.RemoveFirst();
             closedSet.Add(currentNode);
 
-            if (board.tiles[currentNode.x, currentNode.y].layer == LayerMask.NameToLayer(targetLayerName))
+            if (currentNode.type == targetType)
             {
                 pathSuccess = true;
                 targetNode = board.nodes[currentNode.x, currentNode.y];
@@ -111,9 +118,11 @@ public class Pathfinding : MonoBehaviour
 
             foreach (Node neighbour in board.GetNeighbourNodes(currentNode, restriction))
             {
-                if (!neighbour.walkable
+                if (
+                    (!neighbour.walkable && neighbour.type != targetType)
                     || closedSet.Contains(neighbour)
-                    || board.GetUnits()[neighbour.x, neighbour.y] != null)
+                    || board.GetUnits()[neighbour.x, neighbour.y] != null
+                    )
                 {
                     continue;
                 }

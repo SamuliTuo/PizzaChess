@@ -9,7 +9,8 @@ public enum UnitType
     MELEE = 2,
     RANGE = 3,
     MAGE = 4,
-    SUMMONER = 5
+    SUMMONER = 5,
+    COOK = 6
 }
 
 public class Unit : MonoBehaviour
@@ -229,12 +230,10 @@ public class Unit : MonoBehaviour
     {
         if (goingToMove)
         {
-            /*
             //print("current: (" + currentX + ", " + currentY + "), target: " + targetMoveTile);
             board.MoveUnit(this, targetMoveTile); //targetMoveTile);
             goingToMove = false;
             availableMoves = null;
-            */
         }
     }
 }
