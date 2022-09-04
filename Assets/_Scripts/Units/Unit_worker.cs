@@ -15,7 +15,7 @@ public class Unit_worker : Unit
         targetIndex = 0;
         while (true) 
         {
-            if (goingToMove) 
+            if (timeToMove) 
             {
                 if (board.MoveUnit(this, path[targetIndex])) 
                 {
@@ -30,7 +30,7 @@ public class Unit_worker : Unit
                         yield break;
 
                     currentWaypoint = path[targetIndex];
-                    goingToMove = false;
+                    timeToMove = false;
                 }
                 else
                     yield break;
@@ -111,7 +111,7 @@ public class Unit_worker : Unit
                         new Vector2Int(x, y),
                         new(targetDeposit.x, targetDeposit.y),
                         OnPathFound);
-                    goingToMove = true;
+                    timeToMove = true;
                 }
             }
             t = moveInterval * Random.Range(0.82f, 1.15f);

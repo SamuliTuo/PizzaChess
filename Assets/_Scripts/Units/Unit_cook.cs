@@ -1,27 +1,34 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class Unit_cook : Unit
 {
-    [SerializeField] private float workerMoveInterval = 1f;
 
-    private Node targetDeposit = null;
-    bool atTarget = false;
+    // orderID, itemID, Task
+    private Tuple<int, int, Task> currentTask = null;
+    float taskTimer = 0;
 
     public override IEnumerator FollowPath() 
     {
-        Vector2Int currentWaypoint = path[0];
         targetIndex = 0;
         while (true) 
         {
-            if (goingToMove) 
+            if (timeToMove) 
             {
+                if (path.Length <= 0)
+                {
+                    taskTimer = currentTask.Item3.taskDuration;
+                    path = null;
+                    yield break;
+                }
                 if (board.MoveUnit(this, path[targetIndex])) 
                 {
                     if (targetIndex >= path.Length - 1)
                     {
-                        atTarget = true;
+                        taskTimer = currentTask.Item3.taskDuration;
+                        path = null;
                         yield break;
                     }
 
@@ -29,11 +36,13 @@ public class Unit_cook : Unit
                     if (targetIndex >= path.Length)
                         yield break;
 
-                    currentWaypoint = path[targetIndex];
-                    goingToMove = false;
+                    timeToMove = false;
                 }
                 else
+                {
+                    ResetPath();
                     yield break;
+                }
             }
             yield return null;
         }
@@ -94,27 +103,46 @@ public class Unit_cook : Unit
     }
 
     public override void AI(ref Unit[,] units, Vector2Int boardSize) {
-        if (t > 0) {
+        if (taskTimer > 0)
+        {
+            WorkOnTask();
+        }
+        else if (t > 0) {
             t -= Time.deltaTime;
         }
         else {
-            if (atTarget)
+            if (currentTask == null)
             {
-                goingToMove = true;
-                // Mine();
-                // miningInterval?
+                currentTask = TaskManager.Instance.GetTask();
+            }
+            else if (path == null)
+            {
+                FindTargetAndCreatePath();
             }
             else
             {
-                //ResetPath();
-                PathRequestManager.RequestFindClosestNode(
-                    new Vector2Int(x, y),
-                    NodeType.COUNTER,
-                    OnPathFound);
-                goingToMove = true;
-                atTarget = true;
+                timeToMove = true;
             }
-            t = moveInterval * Random.Range(0.82f, 1.15f);
+            t = moveInterval * UnityEngine.Random.Range(0.82f, 1.15f);
         }
+    }
+
+    void WorkOnTask()
+    {
+        taskTimer -= Time.deltaTime;
+        if (taskTimer <= 0)
+        {
+            TaskManager.Instance.FinishTask(currentTask.Item1, currentTask.Item2, currentTask.Item3);
+            currentTask = null;
+        }
+    }
+
+    void FindTargetAndCreatePath()
+    {
+        PathRequestManager.RequestFindClosestNode(
+            new Vector2Int(x, y),
+            currentTask.Item3.targetWorkStation,
+            OnPathFound);
+        timeToMove = true;
     }
 }

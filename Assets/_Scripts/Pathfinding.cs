@@ -111,6 +111,7 @@ public class Pathfinding : MonoBehaviour
 
             if (currentNode.type == targetType)
             {
+                //print("startNode: x " + startNode.x + ", y " + startNode.y + ", targetNode: x " + currentNode.x + ", y " + currentNode.y);
                 pathSuccess = true;
                 targetNode = board.nodes[currentNode.x, currentNode.y];
                 break;

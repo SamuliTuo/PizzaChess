@@ -31,17 +31,27 @@ public class GameManager : MonoBehaviour
         board = GameObject.Find("Board").GetComponent<Chessboard>();
     }
 
+
+    public Recipe[] TEST_RECIPES;
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Alpha1))
+        {
+            TaskManager.Instance.AddNewOrder(TEST_RECIPES);
+        }
+
         if (state != GameState.BATTLE)
             return;
         
 
         // AI
-        Unit[,] activeUnits = board.GetUnits();     
-        foreach (var unit in activeUnits) 
-            if (unit != null) 
-                unit.AI(ref activeUnits, board.GetBoardSize());
+        Unit[,] activeUnits = board.GetUnits();
+        for (int x = 0; x < activeUnits.GetLength(0); x++)
+            for (int y = 0; y < activeUnits.GetLength(1); y++)
+                if (activeUnits[x, y] != null)
+                    activeUnits[x, y].AI(ref activeUnits, board.GetBoardSize());
+
+
         //foreach (var unit in activeUnits)
         //if (unit != null) unit.   
 

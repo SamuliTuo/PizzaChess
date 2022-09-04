@@ -4,7 +4,7 @@ using UnityEngine;
 
 public enum NodeType
 {
-    NONE, KITCHEN, SINK, COUNTER, GARDEN, QUEUE,
+    NONE, KITCHEN, SINK, COUNTER, GARDEN, QUEUE
 }
 
 public class Node : IHeapItem<Node>

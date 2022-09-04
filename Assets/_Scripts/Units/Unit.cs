@@ -23,7 +23,7 @@ public class Unit : MonoBehaviour
     public int y;
     public UnitType type;
     public bool goingToAttack = false;
-    public bool goingToMove = false;
+    public bool timeToMove = false;
     public Chessboard board;
     [HideInInspector] public float t;
 
@@ -49,9 +49,10 @@ public class Unit : MonoBehaviour
 
     private void Start()
     {
-        t = Random.Range(1.30f, 2.20f);
+        t = moveInterval * Random.Range(0.85f, 1.15f);
         board = GameObject.Find("Board").GetComponent<Chessboard>();
         pathfinding = board.GetComponent<Pathfinding>();
+        ResetPath();
     }
     private void Update()
     {
@@ -75,7 +76,7 @@ public class Unit : MonoBehaviour
         targetIndex = 0;
         while (true)
         {
-            if (goingToMove)
+            if (timeToMove)
             {
                 if (board.MoveUnit(this, path[targetIndex]))
                 {
@@ -86,7 +87,7 @@ public class Unit : MonoBehaviour
                     }
 
                     currentWaypoint = path[targetIndex];
-                    goingToMove = false;
+                    timeToMove = false;
                 }
                 else
                 {
@@ -98,13 +99,17 @@ public class Unit : MonoBehaviour
     }
     public void ResetPath()
     {
+        path = null;
         StopCoroutine("FollowPath");
     }
 
     public virtual List<Vector2Int> GetAvailableMoves(ref Unit[,] units, int tileCountX, int tileCountY)
     {
         List<Vector2Int> r = new List<Vector2Int>();
-        
+
+        // Current pos
+        r.Add(new Vector2Int(x, y));
+
         // Right
         if (x + 1 < tileCountX)
         {
@@ -221,18 +226,18 @@ public class Unit : MonoBehaviour
             ResetPath();
             //availableMoves = GetAvailableMoves(ref units, boardSize.x, boardSize.y);
             PathRequestManager.RequestPath(new Vector2Int(x, y), new Vector2Int(0, 0), OnPathFound);//target
-            goingToMove = true;
+            timeToMove = true;
             t = moveInterval * Random.Range(0.83f, 1.15f);
         }
     }
     
     public virtual void Move()
     {
-        if (goingToMove)
+        if (timeToMove)
         {
             //print("current: (" + currentX + ", " + currentY + "), target: " + targetMoveTile);
             board.MoveUnit(this, targetMoveTile); //targetMoveTile);
-            goingToMove = false;
+            timeToMove = false;
             availableMoves = null;
         }
     }

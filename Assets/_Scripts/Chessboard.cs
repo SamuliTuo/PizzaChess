@@ -205,24 +205,25 @@ public class Chessboard : MonoBehaviour
         mesh.vertices = vertices;
         mesh.triangles = tris;
 
-        if (x == 7 && y == 3)            
+        ///////////////////////
+        if ((x==7 && y==3) || (x==7 && y==5))
         {
             tileObject.layer = LayerMask.NameToLayer("Sink");
             nodes[x, y] = new Node(false, x, y, NodeType.SINK);
-            Instantiate(Resources.Load("mineral_pink_mod_01") as GameObject, GetTileCenter(x, y), Quaternion.identity);
+            Instantiate(Resources.Load("sink") as GameObject, GetTileCenter(x, y), Quaternion.identity);
         }
-        else if (x == 2 && y == 2)
+        else if ((x==2 && y==2) || (x==4 && y==2))
         {
             tileObject.layer = LayerMask.NameToLayer("Counter");
             nodes[x, y] = new Node(false, x, y, NodeType.COUNTER);
-            Instantiate(Resources.Load("mineral_pink_mod_01") as GameObject, GetTileCenter(x, y), Quaternion.identity);
+            Instantiate(Resources.Load("counter") as GameObject, GetTileCenter(x, y), Quaternion.identity);
         }
         else
         {
             tileObject.layer = LayerMask.NameToLayer(layer);
             nodes[x, y] = new Node(true, x, y, NodeType.KITCHEN);
         }
-        
+        ///////////////////////
 
         tileObject.AddComponent<BoxCollider>().size = new Vector3(tileSize, 0.1f, tileSize);
         mesh.RecalculateNormals();
@@ -296,51 +297,11 @@ public class Chessboard : MonoBehaviour
         activeUnits = new Unit[TILE_COUNT_X, TILE_COUNT_Y];
 
         int playerTeam = 0;
-        int enemyTeam = 1;
+        //int enemyTeam = 1;
 
         Vector2Int cookSpawnTile = new(TILE_COUNT_X / 2, TILE_COUNT_Y / 2);
-        print(cookSpawnTile.x + ",  " + cookSpawnTile.y);
         activeUnits[cookSpawnTile.x, cookSpawnTile.y] = SpawnSingleUnit(UnitType.COOK, playerTeam);
-        /*
-        for (int i = 0; i < TILE_COUNT_X; i++)
-        {
-            activeUnits[i, 0] = SpawnSingleUnit(UnitType.WORKER, playerTeam);
-            activeUnits[i, 7] = SpawnSingleUnit(UnitType.WORKER, enemyTeam);
-        }
-        */
-        // Player team
-        //activeUnits[0, 0] = SpawnSingleUnit(UnitType.RANGE, playerTeam);
-        //activeUnits[1, 0] = SpawnSingleUnit(UnitType.MAGE, playerTeam);
-        //activeUnits[2, 0] = SpawnSingleUnit(UnitType.RANGE, playerTeam);
-        //activeUnits[3, 0] = SpawnSingleUnit(UnitType.SUMMONER, playerTeam);
-        //activeUnits[4, 0] = SpawnSingleUnit(UnitType.SUMMONER, playerTeam);
-        //activeUnits[5, 0] = SpawnSingleUnit(UnitType.RANGE, playerTeam);
-        //activeUnits[6, 0] = SpawnSingleUnit(UnitType.MAGE, playerTeam);
-        //activeUnits[7, 0] = SpawnSingleUnit(UnitType.RANGE, playerTeam);
-
-        //for (int i = 0; i < TILE_COUNT_X; i++)
-        //    activeUnits[i, 1] = SpawnSingleUnit(UnitType.WORKER, playerTeam);
-
-        // Enemy team
-        /*
-        activeUnits[0, 7] = SpawnSingleUnit(UnitType.RANGE, enemyTeam);
-        activeUnits[1, 7] = SpawnSingleUnit(UnitType.MAGE, enemyTeam);
-        activeUnits[2, 7] = SpawnSingleUnit(UnitType.RANGE, enemyTeam);
-        activeUnits[3, 7] = SpawnSingleUnit(UnitType.SUMMONER, enemyTeam);
-        activeUnits[4, 7] = SpawnSingleUnit(UnitType.SUMMONER, enemyTeam);
-        activeUnits[5, 7] = SpawnSingleUnit(UnitType.RANGE, enemyTeam);
-        activeUnits[6, 7] = SpawnSingleUnit(UnitType.MAGE, enemyTeam);
-        activeUnits[7, 7] = SpawnSingleUnit(UnitType.RANGE, enemyTeam);
-        */
-        /*
-        for (int i = 0; i < TILE_COUNT_X; i++)
-        {
-            activeUnits[i, 15] = SpawnSingleUnit(UnitType.WORKER, playerTeam);
-            activeUnits[i, 14] = SpawnSingleUnit(UnitType.WORKER, playerTeam);
-            activeUnits[i, 1] = SpawnSingleUnit(UnitType.WORKER, playerTeam);
-            activeUnits[i, 0] = SpawnSingleUnit(UnitType.WORKER, playerTeam);
-        }
-        */
+        activeUnits[cookSpawnTile.x, cookSpawnTile.y + 1] = SpawnSingleUnit(UnitType.COOK, playerTeam);
     }
     private Unit SpawnSingleUnit(UnitType type, int team)
     {
