@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,10 @@ public class TaskManager : MonoBehaviour
     public static TaskManager Instance { get; private set; }
     private List<Order> orders = new List<Order>();
     private int currentID = 0;
-    public int GenerateID() { currentID++; return currentID; }
+    public int GenerateID() { 
+        currentID++;
+        return currentID;
+    }
 
     private void Awake()
     {
@@ -20,16 +24,19 @@ public class TaskManager : MonoBehaviour
 
     public void AddNewOrder(Recipe[] items)
     {
-        orders.Add(new Order(items));
+        print("order received, items: " + items.Length);
+        Order o = new Order(items, GenerateID());
+        orders.Add(o);
     }
 
+    // Contains < orderID, itemID, Task >
     public Tuple<int, int, Task> GetTask()
     {
-        Tuple<int, int, Task> r = null;
+        Tuple<int, int, Task> r = new Tuple<int, int, Task>(-1, -1, null);
         for (int i = 0; i < orders.Count; i++)
         {
             r = orders[i].GetTaskFromOrder();
-            if (r != null)
+            if (r.Item3 != null)
             {
                 break;
             }
@@ -37,27 +44,33 @@ public class TaskManager : MonoBehaviour
         return r;
     }
 
-    // Tää ois kai hyvä muuttaa käskemään jotenkin...
-    //  order: finishTask -> item: finishTask
-    //         ...muuuuuttaaa...
     public void FinishTask(int orderID, int itemID, Task task)
-    {
-        foreach (Order _order in orders)
-            if (_order.orderID == orderID)
-                foreach (var _item in _order.orderItems)
-                    if (_item.itemID == itemID)
-                        _item.FinishTask(task);
-    }
-
-    public void OrderCompleted(int orderID)
     {
         for (int i = 0; i < orders.Count; i++)
         {
             if (orders[i].orderID == orderID)
             {
-                orders.RemoveAt(i);
-                Debug.Log("Order completed!");
+                orders[i].FinishTask(itemID, task);
+                break;
             }
+        }
+    }
+
+    public void OrderCompleted(int orderID)
+    {
+        Order o = null;
+        for (int i = 0; i < orders.Count; i++)
+        {
+            if (orders[i].orderID == orderID)
+            {
+                o = orders[i];
+                break;
+            }
+        }
+        if (o != null)
+        {
+            print("OrderCompleted");
+            orders.Remove(o);
         }
     }
 }
@@ -68,10 +81,10 @@ public class Order
     public List<Item> orderItems;
     public int orderID;
 
-    public Order(Recipe[] _orderItems)
+    public Order(Recipe[] _orderItems, int _orderID)
     {
+        orderID = _orderID;
         orderItems = new List<Item>();
-        orderID = TaskManager.Instance.GenerateID();
         foreach (var recipe in _orderItems)
         {
             orderItems.Add(new Item(this, recipe.phases, recipe.GetAllTasksWithPhases()));
@@ -80,17 +93,28 @@ public class Order
 
     public Tuple<int, int, Task> GetTaskFromOrder()
     {
-        Tuple<int, int, Task> r = null;
+        Tuple<int, int, Task> r = new Tuple<int, int, Task>(-1, -1, null);
         for (int i = 0; i < orderItems.Count; i++)
         {
-            var task = orderItems[i].GetTaskFromItem();
-            if (task != null)
+            Tuple<int, Task> item = orderItems[i].GetTaskFromItem();
+            if (item.Item2 != null)
             {
-                r = new Tuple<int, int, Task>(this.orderID, orderItems[i].itemID, task);
+                r = new Tuple<int, int, Task>(orderID, item.Item1, item.Item2);
                 break;
             }
         }
         return r;
+    }
+
+    public void FinishTask(int itemID, Task task)
+    {
+        for (int i = 0; i < orderItems.Count; i++)
+        {
+            if (orderItems[i].itemID == itemID)
+            {
+                orderItems[i].FinishTask(task);
+            }
+        }
     }
 
     public void ItemCompleted(int itemID)
@@ -125,48 +149,33 @@ public class Item
         itemID = TaskManager.Instance.GenerateID();
         currentPhase = 1;
         phases = _phases;
-        pendingTasks = _tasks;
+        pendingTasks = new Dictionary<Task, int>();
+        foreach (KeyValuePair<Task, int> pair in _tasks)
+        {
+            pendingTasks.Add(pair.Key, pair.Value);
+        }
         ongoingTasks = new Dictionary<Task, int>();
     }
 
-    public Task GetTaskFromItem()
+    public Tuple<int, Task> GetTaskFromItem()
     {
-        var task = CheckIfCurrentPhaseHasPendingTask();
-
-        if (task == null)
+        KeyValuePair<Task, int> r = new KeyValuePair<Task, int>(null, -1);
+        foreach (KeyValuePair<Task, int> task in pendingTasks)
         {
-            if (ongoingTasks.GetKeysByValue(currentPhase).Count == 0)
+            if (task.Value == currentPhase)
             {
-                currentPhase++;
-                if (currentPhase > phases)
-                {
-                    Debug.Log("pizza ready!");
-                    order.ItemCompleted(this.itemID);
-                    return null;
-                }
-                else
-                {
-                    task = CheckIfCurrentPhaseHasPendingTask();
-                }
-            }
-        }
-        return task;
-    }
-
-    Task CheckIfCurrentPhaseHasPendingTask()
-    {
-        Task r = null;
-        foreach (KeyValuePair<Task, int> item in pendingTasks)
-        {
-            if (item.Value == currentPhase)
-            {
-                r = item.Key;
-                pendingTasks.Remove(item.Key);
-                ongoingTasks.Add(item.Key, item.Value);
+                r = task;
                 break;
             }
         }
-        return r;
+
+        if (r.Key != null)
+        {
+            pendingTasks.Remove(r.Key);
+            ongoingTasks.Add(r.Key, r.Value);
+            return new Tuple<int, Task>(itemID, r.Key);
+        }
+        return new Tuple<int, Task>(-1, null);
     }
 
     public bool FinishTask(Task task)
@@ -175,9 +184,35 @@ public class Item
         {
             Debug.Log("task finished!");
             ongoingTasks.Remove(task);
+            if (IsPhaseDone())
+            {
+                currentPhase++;
+                if (currentPhase > phases)
+                {
+                    order.ItemCompleted(this.itemID);
+                }
+            }
             return true;
         }
-
         return false;
+    }
+
+    public bool IsPhaseDone()
+    {
+        foreach (var task in pendingTasks)
+        {
+            if (task.Value == currentPhase)
+            {
+                return false;
+            }
+        }
+        foreach (var task in ongoingTasks)
+        {
+            if (task.Value == currentPhase)
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

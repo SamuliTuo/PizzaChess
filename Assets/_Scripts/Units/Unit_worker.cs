@@ -4,14 +4,12 @@ using UnityEngine;
 
 public class Unit_worker : Unit
 {
-    [SerializeField] private float workerMoveInterval = 1f;
-
     private Node targetDeposit = null;
     bool atDeposit = false;
 
     public override IEnumerator FollowPath() 
     {
-        Vector2Int currentWaypoint = path[0];
+        //Vector2Int currentWaypoint = path[0];
         targetIndex = 0;
         while (true) 
         {
@@ -29,7 +27,7 @@ public class Unit_worker : Unit
                     if (targetIndex >= path.Length)
                         yield break;
 
-                    currentWaypoint = path[targetIndex];
+                    //currentWaypoint = path[targetIndex];
                     timeToMove = false;
                 }
                 else

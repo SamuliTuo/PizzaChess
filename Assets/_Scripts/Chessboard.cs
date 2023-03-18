@@ -205,25 +205,47 @@ public class Chessboard : MonoBehaviour
         mesh.vertices = vertices;
         mesh.triangles = tris;
 
-        ///////////////////////
+        /////////////////////// 
+        /// n‰‰ nyt spawnataan t‰‰lt. Siirret‰‰n myˆhemmin
+        /// muualle kun pelaajalle pit‰‰ kuitenkin tehd‰
+        /// jotku spawnaus toolsit huonekalujen asettamista 
+        /// ja siirtely‰ varten.
         if ((x==7 && y==3) || (x==7 && y==5))
         {
             tileObject.layer = LayerMask.NameToLayer("Sink");
             nodes[x, y] = new Node(false, x, y, NodeType.SINK);
-            Instantiate(Resources.Load("sink") as GameObject, GetTileCenter(x, y), Quaternion.identity);
+            Instantiate(Resources.Load("furniture_sink") as GameObject, GetTileCenter(x, y), Quaternion.identity);
         }
         else if ((x==2 && y==2) || (x==4 && y==2))
         {
             tileObject.layer = LayerMask.NameToLayer("Counter");
             nodes[x, y] = new Node(false, x, y, NodeType.COUNTER);
-            Instantiate(Resources.Load("counter") as GameObject, GetTileCenter(x, y), Quaternion.identity);
+            Instantiate(Resources.Load("furniture_counter") as GameObject, GetTileCenter(x, y), Quaternion.identity);
         }
+        else if (x==5 && y==9)
+        {
+            tileObject.layer = LayerMask.NameToLayer("Fridge");
+            nodes[x, y] = new Node(false, x, y, NodeType.FRIDGE);
+            Instantiate(Resources.Load("furniture_fridge") as GameObject, GetTileCenter(x, y), Quaternion.identity);
+        }
+        else if (x==1 && y==0)
+        {
+            tileObject.layer = LayerMask.NameToLayer("Counter");
+            nodes[x,y] = new Node(false, x, y, NodeType.PIZZA_BOXES);
+            Instantiate(Resources.Load("furniture_pizzaBoxes") as GameObject, GetTileCenter(x, y), Quaternion.identity);
+        }
+        else if (x==0 && y==9)
+        {
+            tileObject.layer = LayerMask.NameToLayer("Counter");
+            nodes[x,y] = new Node(false, x, y, NodeType.OVEN);
+            Instantiate(Resources.Load("furniture_oven") as GameObject, GetTileCenter(x, y), Quaternion.identity);
+        }
+        ///////////////////////
         else
         {
             tileObject.layer = LayerMask.NameToLayer(layer);
             nodes[x, y] = new Node(true, x, y, NodeType.NONE);
         }
-        ///////////////////////
 
         tileObject.AddComponent<BoxCollider>().size = new Vector3(tileSize, 0.1f, tileSize);
         mesh.RecalculateNormals();
@@ -313,8 +335,12 @@ public class Chessboard : MonoBehaviour
         //int enemyTeam = 1;
 
         Vector2Int cookSpawnTile = new(TILE_COUNT_X / 2, TILE_COUNT_Y / 2);
-        activeUnits[cookSpawnTile.x, cookSpawnTile.y] = SpawnSingleUnit(UnitType.COOK, playerTeam);
-        activeUnits[cookSpawnTile.x, cookSpawnTile.y + 1] = SpawnSingleUnit(UnitType.COOK, playerTeam);
+        //activeUnits[cookSpawnTile.x, cookSpawnTile.y] = SpawnSingleUnit(UnitType.COOK, playerTeam);
+        activeUnits[0, 2] = SpawnSingleUnit(UnitType.COOK, playerTeam);
+        activeUnits[0, 3] = SpawnSingleUnit(UnitType.COOK, playerTeam);
+        activeUnits[0, 4] = SpawnSingleUnit(UnitType.COOK, playerTeam);
+        activeUnits[0, 5] = SpawnSingleUnit(UnitType.COOK, playerTeam);
+        //activeUnits[cookSpawnTile.x, cookSpawnTile.y + 1] = SpawnSingleUnit(UnitType.COOK, playerTeam);
     }
     private Unit SpawnSingleUnit(UnitType type, int team)
     {
@@ -341,7 +367,7 @@ public class Chessboard : MonoBehaviour
         activeUnits[x, y].y = y;
         activeUnits[x, y].SetPosition(GetTileCenter(x, y), force);
     }
-    private Vector3 GetTileCenter(int x, int y)
+    public Vector3 GetTileCenter(int x, int y)
     {
         return new Vector3(x * tileSize, yOffset, y * tileSize) + new Vector3(tileSize * 0.5f, 0, tileSize * 0.5f);
     }

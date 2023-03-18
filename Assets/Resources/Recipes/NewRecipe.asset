@@ -12,23 +12,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86f934a26c05dc24692dd7503f72096a, type: 3}
   m_Name: NewRecipe
   m_EditorClassIdentifier: 
-  phases: 4
+  phases: 6
   tasks:
   - task: {fileID: 11400000, guid: a05ed9a4cd4b6344d95eabf5eb31095f, type: 2}
-    phase: 1
-  - task: {fileID: 11400000, guid: deced0e0563bbab4ab0ee39fb4d07e96, type: 2}
     phase: 1
   - task: {fileID: 11400000, guid: ca2b7e563b7111f499abfdcdc292d930, type: 2}
     phase: 2
   - task: {fileID: 11400000, guid: 028d7eb4b540cc3409a634d4d229d784, type: 2}
-    phase: 2
-  - task: {fileID: 11400000, guid: c9424ab5677fc2848a62278ecd02be80, type: 2}
-    phase: 2
-  - task: {fileID: 11400000, guid: 24289d9cbbc06ab498845d052966d507, type: 2}
-    phase: 2
-  - task: {fileID: 11400000, guid: 2807956220e13254b874bdd1ec18825e, type: 2}
     phase: 3
-  - task: {fileID: 11400000, guid: 83cdb66ae26d28a44b02699949520af1, type: 2}
-    phase: 3
-  - task: {fileID: 11400000, guid: ce456e0b51c6f7a479cbb60f320ad1ea, type: 2}
+  - task: {fileID: 11400000, guid: a05ed9a4cd4b6344d95eabf5eb31095f, type: 2}
     phase: 4
+  - task: {fileID: 11400000, guid: ca2b7e563b7111f499abfdcdc292d930, type: 2}
+    phase: 5
+  - task: {fileID: 11400000, guid: 24289d9cbbc06ab498845d052966d507, type: 2}
+    phase: 6

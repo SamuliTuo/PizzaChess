@@ -7,8 +7,9 @@ public class Unit_cook : Unit
 {
 
     // orderID, itemID, Task
-    private Tuple<int, int, Task> currentTask = null;
+    private Tuple<int, int, Task> currentTask = new Tuple<int, int, Task>(-1, -1, null);
     float taskTimer = 0;
+    private GameObject carriedObj;
 
     public override IEnumerator FollowPath() 
     {
@@ -25,6 +26,7 @@ public class Unit_cook : Unit
                 }
                 if (board.MoveUnit(this, path[targetIndex])) 
                 {
+                    RotateUnit(path[targetIndex]);
                     if (targetIndex >= path.Length - 1)
                     {
                         taskTimer = currentTask.Item3.taskDuration;
@@ -47,7 +49,10 @@ public class Unit_cook : Unit
             yield return null;
         }
     }
-
+    void RotateUnit(Vector2Int lookAt)
+    {
+        transform.LookAt(board.GetTileCenter(lookAt.x, lookAt.y));
+    }
     public override List<Vector2Int> GetAvailableMoves(ref Unit[,] units, int tileCountX, int tileCountY)
     {
         List<Vector2Int> r = new();
@@ -111,9 +116,10 @@ public class Unit_cook : Unit
             t -= Time.deltaTime;
         }
         else {
-            if (currentTask == null)
+            if (currentTask.Item3 == null)
             {
                 currentTask = TaskManager.Instance.GetTask();
+                print(currentTask);
             }
             else if (path == null)
             {
@@ -132,8 +138,23 @@ public class Unit_cook : Unit
         taskTimer -= Time.deltaTime;
         if (taskTimer <= 0)
         {
+            var taskObj = currentTask.Item3.TaskEnded();
+            if (taskObj != null)
+            {
+                carriedObj = Instantiate(
+                    taskObj, 
+                    transform.position + transform.forward, 
+                    Quaternion.identity, 
+                    transform);
+            }
+            else
+            {
+                Destroy(carriedObj);
+                carriedObj = null;
+            }
+            
             TaskManager.Instance.FinishTask(currentTask.Item1, currentTask.Item2, currentTask.Item3);
-            currentTask = null;
+            currentTask = new Tuple<int, int, Task>(-1, -1, null);
         }
     }
 

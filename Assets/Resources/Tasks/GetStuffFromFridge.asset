@@ -10,7 +10,9 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 5dd4a718a17b40a488e2e0474e8acdf8, type: 3}
-  m_Name: Counter
+  m_Name: GetStuffFromFridge
   m_EditorClassIdentifier: 
   targetWorkStation: 3
-  taskDuration: 1.5
+  taskAction: 4
+  taskDuration: 0.5
+  IngredientPrefab: {fileID: 3451290796350462026, guid: 6b39495b6c90dd44aab433d54a5a8f71, type: 3}

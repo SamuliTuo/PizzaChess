@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
         for (int x = 0; x < activeUnits.GetLength(0); x++)
             for (int y = 0; y < activeUnits.GetLength(1); y++)
                 if (activeUnits[x, y] != null)
-                    activeUnits[x, y].AI(ref activeUnits, board.GetBoardSize());
+                    activeUnits[x, y].AI(ref activeUnits, board.GetBoardSize());    
 
 
         //foreach (var unit in activeUnits)
